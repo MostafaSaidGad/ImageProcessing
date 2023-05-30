@@ -14,6 +14,9 @@ namespace ImageProcessing
         static void Main(string[] args)
         {
             string path = "C:\\Users\\DELL\\Desktop\\Mostafa's Project\\My Project\\t12.png";
+            //string path = "C:\\Users\\DELL\\Desktop\\Mostafa's Project\\My Project\\t11.png";
+            //string path = "C:\\Users\\DELL\\Desktop\\Mostafa's Project\\My Project\\t13.png";
+            //string path = "C:\\Users\\DELL\\Desktop\\Mostafa's Project\\My Project\\t10.png";
 
             Mat pic = Cv2.ImRead(path, ImreadModes.Grayscale);
             Mat pic2 = Cv2.ImRead(path, ImreadModes.Color);
@@ -21,15 +24,18 @@ namespace ImageProcessing
             Mat pic_thresh = new Mat();
             Cv2.Threshold(pic, pic_thresh, 0, 255, ThresholdTypes.Binary | ThresholdTypes.Otsu);
 
-            Cv2.ImShow("Pic_Threshold", pic_thresh);
+            Cv2.ImShow("Threshold", pic_thresh);
 
             OpenCvSharp.Point[][] contours;
             HierarchyIndex[] Hierarchy;
             Cv2.FindContours(pic_thresh, out contours, out Hierarchy, RetrievalModes.Tree, ContourApproximationModes.ApproxSimple);
             Cv2.DrawContours(pic2, contours, -1, Scalar.Red, 1);
-            Cv2.ImShow("PicContour", pic2);
+            Cv2.ImShow("Primary Contours", pic2);
 
-            int minContourLength = 25; // Set the minimum contour length
+            //int minContourLength = 100; // Set the minimum contour length
+            //int minContourLength = 50;
+            //int minContourLength = 40;
+            int minContourLength = 25;
             int Good_Contour = 0;
             List<int> Good_Contour_Ref = new List<int>();
             List<double> GrayMean = new List<double>();
@@ -43,7 +49,7 @@ namespace ImageProcessing
                     Cv2.DrawContours(pic2, new OpenCvSharp.Point[][] { contours[i] }, -1, Scalar.Blue, 1);
                     Good_Contour_Ref.Add(i);
                     Good_Contour++;
-                    Cv2.ImShow("PicBetterContour", pic2);
+                    Cv2.ImShow("Contours after first filtration", pic2);
 
                     // Create a mask for the contour
                     Mat Contour_Mask = Mat.Zeros(pic.Rows, pic.Cols, MatType.CV_8UC1);
@@ -58,7 +64,7 @@ namespace ImageProcessing
                 }
             }
             Console.WriteLine("Number of all detected contours after thresholding = {0}", contours.Length);
-            Console.WriteLine("Number of all good detected contours (filtered out the small blobs) = {0}", Good_Contour);  // The number of contours with length >= minContourLength
+            Console.WriteLine("Number of all good detected contours (after filtration) = {0}", Good_Contour);  // The number of contours with length >= minContourLength
             Console.Write("----------------------------------------------------------------\n");
 
             // Find the mean and standard deviation of the gray mean values
@@ -68,6 +74,7 @@ namespace ImageProcessing
 
             // Calculate the appropriate cutoff value
             double cutoff = mean + 0.75 * standardDeviation;
+            //double cutoff = mean + 3 * standardDeviation;
 
             // Scan for good quads
             int goodQuadCount = 0;
@@ -94,10 +101,10 @@ namespace ImageProcessing
                     }
                 }
             }
-            Cv2.ImShow("PicGoodContour", pic2);
+            Cv2.ImShow("Finalized Contours", pic2);
 
             //print good quads ref number
-            Console.WriteLine("\nGood Quad Ref: ");
+            Console.WriteLine("\nGood Quad Reference: ");
             for (int i = 0; i < goodQuadReferences.Count; i++)
             {
                 Console.WriteLine(goodQuadReferences[i]);
@@ -107,7 +114,10 @@ namespace ImageProcessing
 
 
             // APROXIMATEPOLYDP DRAW
+            //double Epsilon = 0.5;
             double Epsilon = 0.03;
+            //double Epsilon = 0.1;
+
             OpenCvSharp.Point[][] NotFilteredPoints;
             NotFilteredPoints = new OpenCvSharp.Point[goodQuadReferences.Count][];
             for (int k = 0; k < goodQuadReferences.Count; k++)
@@ -125,9 +135,12 @@ namespace ImageProcessing
 
             /// filtering out closed double points
             OpenCvSharp.Point[][] FilteredPoints = NotFilteredPoints;
-            /////////////////Neigborhhod_FilterVal////////////
-            double Neighborhood_FilterVal = 0.015;
-        
+            /////////////////close points filtration constant////////////
+            //double filtrationconstant = 0.05;
+            //double filtrationconstant = 0.0.03;
+            //double filtrationconstant = 0.015;
+            double filtration_constant = 0.025;
+
             for (int k = 0; k < FilteredPoints.Length; k++)
             {
                 for (int i = 0; i < FilteredPoints[k].Length; i++)
@@ -135,9 +148,9 @@ namespace ImageProcessing
 
                     for (int j = 0; j < FilteredPoints[k].Length; j++)
                     {
-                        double distancebetweentwopoints = Math.Sqrt(Math.Pow((FilteredPoints[k][i].X - FilteredPoints[k][j].X), 2) + Math.Pow((FilteredPoints[k][i].Y - FilteredPoints[k][j].Y), 2));
+                        double distance_between_two_points = Math.Sqrt(Math.Pow((FilteredPoints[k][i].X - FilteredPoints[k][j].X), 2) + Math.Pow((FilteredPoints[k][i].Y - FilteredPoints[k][j].Y), 2));
 
-                        if (distancebetweentwopoints < Neighborhood_FilterVal * Cv2.ArcLength(contours[goodQuadReferences[k]], true))
+                        if (distance_between_two_points < filtration_constant * Cv2.ArcLength(contours[goodQuadReferences[k]], true))
                         {
                             int midx = (FilteredPoints[k][i].X + FilteredPoints[k][j].X) / 2;
                             int midy = (FilteredPoints[k][i].Y + FilteredPoints[k][j].Y) / 2;
@@ -151,20 +164,19 @@ namespace ImageProcessing
             }
 
 
-
             //draw filterd points
             for (int k = 0; k < FilteredPoints.Length; k++)
             {
                 for (int i = 0; i < FilteredPoints[k].Length; i++)
                 {
-                    Cv2.Circle(pic2, FilteredPoints[k][i].X, FilteredPoints[k][i].Y, 1, Scalar.Blue, 2);
+                    Cv2.Circle(pic2, FilteredPoints[k][i].X, FilteredPoints[k][i].Y, 1, Scalar.Black, 2);
                     //Debug.WriteLine(FilteredPoints[k][i].X); Debug.WriteLine(FilteredPoints[k][i].Y);
                 }
                  if (FilteredPoints[k].Length > 2)
                  {
                      for (int i = 0; i < FilteredPoints[k].Length - 1; i++)
                      {
-                         Cv2.Line(pic2, FilteredPoints[k][i], FilteredPoints[k][i + 1], Scalar.Blue, 1);
+                         Cv2.Line(pic2, FilteredPoints[k][i], FilteredPoints[k][i + 1], Scalar.Black, 1);
                      }
                  }
             }
