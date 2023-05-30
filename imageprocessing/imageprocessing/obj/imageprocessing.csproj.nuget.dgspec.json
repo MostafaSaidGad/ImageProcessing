@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Andrew Seha\\Desktop\\Mostafa's project\\imageprocessing\\imageprocessing\\imageprocessing.csproj": {}
+    "C:\\Users\\DELL\\Documents\\GitHub\\ImageProcessing\\imageprocessing\\imageprocessing\\imageprocessing.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Andrew Seha\\Desktop\\Mostafa's project\\imageprocessing\\imageprocessing\\imageprocessing.csproj": {
+    "C:\\Users\\DELL\\Documents\\GitHub\\ImageProcessing\\imageprocessing\\imageprocessing\\imageprocessing.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Andrew Seha\\Desktop\\Mostafa's project\\imageprocessing\\imageprocessing\\imageprocessing.csproj",
+        "projectUniqueName": "C:\\Users\\DELL\\Documents\\GitHub\\ImageProcessing\\imageprocessing\\imageprocessing\\imageprocessing.csproj",
         "projectName": "imageprocessing",
-        "projectPath": "C:\\Users\\Andrew Seha\\Desktop\\Mostafa's project\\imageprocessing\\imageprocessing\\imageprocessing.csproj",
-        "packagesPath": "C:\\Users\\Andrew Seha\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Andrew Seha\\Desktop\\Mostafa's project\\imageprocessing\\imageprocessing\\obj\\",
+        "projectPath": "C:\\Users\\DELL\\Documents\\GitHub\\ImageProcessing\\imageprocessing\\imageprocessing\\imageprocessing.csproj",
+        "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\DELL\\Documents\\GitHub\\ImageProcessing\\imageprocessing\\imageprocessing\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Andrew Seha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -69,7 +69,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
