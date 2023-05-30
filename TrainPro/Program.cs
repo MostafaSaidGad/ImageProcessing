@@ -158,10 +158,7 @@ namespace ImageProcessing
                 for (int i = 0; i < FilteredPoints[k].Length; i++)
                 {
                     Cv2.Circle(pic2, FilteredPoints[k][i].X, FilteredPoints[k][i].Y, 1, Scalar.Blue, 2);
-
-                    
-
-
+                    //Debug.WriteLine(FilteredPoints[k][i].X); Debug.WriteLine(FilteredPoints[k][i].Y);
                 }
                  if (FilteredPoints[k].Length > 2)
                  {
